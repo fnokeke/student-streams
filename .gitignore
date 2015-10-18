@@ -1,2 +1,5 @@
 /dataset
 /env_ss
+yahoo_finance_data.csv
+.DS_STORE
+src/.ipynb_checkpoints/location-streams-checkpoint.ipynb
