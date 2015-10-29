@@ -21,9 +21,10 @@ import seaborn as sns
 
 import matplotlib.dates as mdates
 from matplotlib import pyplot as plt
-
+from ggplot import *
 
 %matplotlib inline
+pd.options.mode.chained_assignment = None  # remove default='warn'
 
 # <markdowncell>
 
@@ -98,7 +99,7 @@ ld.head()
 
 # <codecell>
 
-no_of_weeks = 4
+no_of_weeks = 2
 no_of_days = no_of_weeks * 7
 
 start_date = ld[ld.date=='2014-11-09'].date.head(1)
@@ -287,13 +288,48 @@ day_time_patterns.dtypes
 sns.set(style="whitegrid", color_codes=True)
 sns.set_context({"figure.figsize": (10, 7)})
 
-axes = sns.stripplot(x="date", y="hr", hue="loc_label", data=day_time_patterns, jitter=True);
+axes = sns.stripplot(x="weekday", y="hr", hue="loc_label", data=day_time_patterns, jitter=True);
 axes.set_ylim(0,25)
 
 labels = ["Midnight", "5am", "10am", "3pm", "8pm", "Midnight"]
 axes.set_yticklabels(labels)
 
 axes.legend(["Home","Other","Work"],loc='center left', bbox_to_anchor=(1, 0.5), fancybox=True, shadow=True)
+
+# <codecell>
+
+def get_day_num(day): 
+    if day == 'Monday':
+        return 1
+    elif day == 'Tuesday':
+        return 2    
+    elif day == 'Wednesday':
+        return 3    
+    elif day == 'Thursday':
+        return 4    
+    elif day == 'Friday':
+        return 5    
+    elif day == 'Saturday':
+        return 6    
+    elif day == 'Sunday':
+        return 7
+
+day_time_patterns['day_value'] = day_time_patterns.weekday.astype(str).map(lambda x: get_day_num(x))
+
+# <codecell>
+
+day_time_patterns.rename(columns={'loc_label': 'Location'}, inplace=True)
+day_time_patterns.head(10)
+
+# <codecell>
+
+weekday_label = ("Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun")
+time_label = ("Midnight", "5am", "10am", "3pm", "8pm", "Midnight")
+
+ggplot(day_time_patterns, aes('day_value', 'hr', color='Location')) + \
+    geom_point() + \
+    scale_x_continuous(name = "Day of Week", breaks=range(1,8), labels=weekday_label) + \
+    scale_y_continuous(name="Time of Day", limits=(0,25), labels=time_label)
 
 # <codecell>
 
