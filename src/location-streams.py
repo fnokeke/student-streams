@@ -65,10 +65,10 @@ ld.rename(columns={
 
 # # Glimpse of raw data
 
-# In[28]:
+# In[220]:
 
 print ld.dtypes
-ld.head()
+ld.head(50)
 
 
 # # Ignore locations with accuracy estimates over 1000m
@@ -307,14 +307,15 @@ rr
 
 # # Use plotly for heatmaps of day by time
 
-# In[45]:
+# In[211]:
 
 tls.set_credentials_file(username='fnokeke', api_key='v44dzxrwuw')
 
 
-# In[203]:
+# In[215]:
 
-df = day_patterns[['day', 'time']]
+selected_patterns = day_patterns[day_patterns.loc_label=='other']
+df = selected_patterns[['day', 'time']]
 df.time = df.time.map(lambda x: int(x))
 df['freq'] = 0
 
@@ -341,10 +342,10 @@ dfg = dfg.T
 dfg
 
 
-# In[204]:
+# In[219]:
 
 dfg.iplot(kind='heatmap',colorscale='spectral',
-                                filename='cufflinks/simple-heatmap')
+                        filename='cufflinks/simple-heatmap')
 
 
 # In[ ]:
